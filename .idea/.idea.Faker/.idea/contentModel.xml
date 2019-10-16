@@ -9,6 +9,7 @@
         <e p="Faker.cs" t="Include" />
         <e p="Faker.csproj" t="IncludeRecursive" />
         <e p="Generator" t="Include">
+          <e p="ArrayGenerator.cs" t="Include" />
           <e p="BoolGenerator.cs" t="Include" />
           <e p="ByteGenerator.cs" t="Include" />
           <e p="CharGenerator.cs" t="Include" />

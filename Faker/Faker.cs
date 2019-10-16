@@ -11,33 +11,46 @@ namespace Faker
     {
         private readonly Dictionary<Type, IGenerator> _generators;
         private readonly string _pluginPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
+
         public Faker()
         {
             _generators = new Dictionary<Type, IGenerator>();
-            LoadGenerators();
+//            InitDictionary();
             LoadGeneratorsFromDirectory(); 
         }
+
+        private void InitDictionary()
+        {
+            IGenerator iGenerator = new BoolGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new ByteGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new CharGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new DateTimeGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new DoubleGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new FloatGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new IntGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new LongGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new SByteGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new ShortGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new StringGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new UIntGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new ULongGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+            iGenerator = new UShortGenerator();
+            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
+        }
         
-        private void LoadGenerators()
-        {
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            LoadGeneratorsFromAssembly(currentAssembly);
-        }
-
-        private void LoadGeneratorsFromAssembly(Assembly assembly)
-        {
-            var types = assembly.GetTypes().Where(type => typeof(IGenerator).IsAssignableFrom(type));
-            foreach (var type in types)
-            {
-                if (type.FullName == null) continue;
-                if (!type.IsClass) continue;
-                if (assembly.CreateInstance(type.FullName) is IGenerator generatorPlugin)
-                {
-                    _generators.Add(generatorPlugin.GetGenerationType(), generatorPlugin);
-                }
-            }
-        }
-
         private void LoadGeneratorsFromDirectory()
         {
             if (_generators == null) return;
@@ -58,6 +71,20 @@ namespace Faker
             }
         }
 
+        private void LoadGeneratorsFromAssembly(Assembly assembly)
+        {
+            var types = assembly.GetTypes().Where(type => typeof(IGenerator).IsAssignableFrom(type));
+            foreach (var type in types)
+            {
+                if (type.FullName == null) continue;
+                if (!type.IsClass) continue;
+                if (assembly.CreateInstance(type.FullName) is IGenerator generatorPlugin)
+                {
+                    _generators.Add(generatorPlugin.GetGenerationType(), generatorPlugin);
+                }
+            }
+        }
+
         public object Create<T>()
         {
             var type = typeof(T);
@@ -66,7 +93,7 @@ namespace Faker
             if (_generators.TryGetValue(type, out var generator))
             {
                 instance = generator.Generate();
-            } 
+            }
             else if (type.IsEnum)
             {
                 instance = new EnumGenerator<T>().Generate();
@@ -75,10 +102,19 @@ namespace Faker
             {
                 instance = new ArrayGenerator<T>().Generate();
             }
+            else if (type == typeof(string))
+            {
+                return default(string);
+            }
             else if (type.IsClass || type.IsValueType)
             {
                 instance = CreateThroughConstructor(type);
+                if (instance == null) return default(T);;
                 StuffTheObject(instance);
+            }
+            else if (true)
+            {
+                return default(T);
             }
 
             return instance;

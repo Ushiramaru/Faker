@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="C:\Users\Асус\.nuget\packages\nunit3testadapter\3.11.0\build\netcoreapp1.0\nunit.engine.netstandard.dll" t="Include" />
+    <e p="C:\Users\Асус\.nuget\packages\nunit3testadapter\3.11.0\build\netcoreapp1.0\NUnit3.TestAdapter.dll" t="Include" />
+    <e p="C:\Users\Асус\.nuget\packages\nunit3testadapter\3.11.0\build\netcoreapp1.0\NUnit3.TestAdapter.pdb" t="Include" />
     <e p="C:\Users\Асус\.Rider2019.2\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\Асус\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_Faker.-694344718.00" t="ExcludeRecursive" />
     <e p="D:\Faker" t="IncludeFlat">
@@ -36,7 +39,54 @@
         </e>
       </e>
       <e p="Faker.sln" t="IncludeFlat" />
+      <e p="Generators" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Generator" t="Include">
+          <e p="BoolGenerator.cs" t="Include" />
+          <e p="ByteGenerator.cs" t="Include" />
+          <e p="CharGenerator.cs" t="Include" />
+          <e p="DateTimeGenerator.cs" t="Include" />
+          <e p="DoubleGenerator.cs" t="Include" />
+          <e p="FloatGenerator.cs" t="Include" />
+          <e p="IntGenerator.cs" t="Include" />
+          <e p="LongGenerator.cs" t="Include" />
+          <e p="SByteGenerator.cs" t="Include" />
+          <e p="ShortGenerator.cs" t="Include" />
+          <e p="Stringgenerator.cs" t="Include" />
+          <e p="UIntGenerator.cs" t="Include" />
+          <e p="ULongGenerator.cs" t="Include" />
+          <e p="UShortGenerator.cs" t="Include" />
+        </e>
+        <e p="Generators.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Generators.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
       <e p="packages" t="ExcludeRecursive" />
+      <e p="TestFaker" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DTO" t="Include">
+          <e p="Class1.cs" t="Include" />
+          <e p="Class2.cs" t="Include" />
+          <e p="Class3.cs" t="Include" />
+          <e p="Class4.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="TestFaker.AssemblyInfo.cs" t="Include" />
+              <e p="TestFaker.Program.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="SimpleEnum.cs" t="Include" />
+        <e p="TestFaker.cs" t="Include" />
+        <e p="TestFaker.csproj" t="IncludeRecursive" />
+      </e>
     </e>
   </component>
 </project>

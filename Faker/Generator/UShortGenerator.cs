@@ -7,7 +7,7 @@ namespace Faker.Generator
         private static readonly Random Random = new Random();
         public object Generate()
         {
-            return Random.Next(1, ushort.MaxValue + 1);
+            return (ushort) Random.Next(1, ushort.MaxValue + 1);
         }
 
         public Type GetGenerationType()

@@ -12,6 +12,7 @@
           <e p="BoolGenerator.cs" t="Include" />
           <e p="ByteGenerator.cs" t="Include" />
           <e p="CharGenerator.cs" t="Include" />
+          <e p="DateTimeGenerator.cs" t="Include" />
           <e p="DoubleGenerator.cs" t="Include" />
           <e p="FloatGenerator.cs" t="Include" />
           <e p="IGenerator.cs" t="Include" />

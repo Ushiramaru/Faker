@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Faker.Generator;
@@ -9,10 +10,52 @@ namespace Faker
     public class Faker
     {
         private readonly Dictionary<Type, IGenerator> _generators;
-
+        private readonly string _pluginPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
         public Faker()
         {
             _generators = new Dictionary<Type, IGenerator>();
+            LoadGenerators();
+            LoadGeneratorsFromDirectory(); 
+        }
+        
+        private void LoadGenerators()
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            LoadGeneratorsFromAssembly(currentAssembly);
+        }
+
+        private void LoadGeneratorsFromAssembly(Assembly assembly)
+        {
+            var types = assembly.GetTypes().Where(type => typeof(IGenerator).IsAssignableFrom(type));
+            foreach (var type in types)
+            {
+                if (type.FullName == null) continue;
+                if (!type.IsClass) continue;
+                if (assembly.CreateInstance(type.FullName) is IGenerator generatorPlugin)
+                {
+                    _generators.Add(generatorPlugin.GetGenerationType(), generatorPlugin);
+                }
+            }
+        }
+
+        private void LoadGeneratorsFromDirectory()
+        {
+            if (_generators == null) return;
+            
+            var pluginDirectory = new DirectoryInfo(_pluginPath);
+            if (!pluginDirectory.Exists)
+            {
+                pluginDirectory.Create();
+                return;
+            }
+
+            var pluginFiles = Directory.GetFiles(pluginDirectory.FullName,"*.dll");
+
+            foreach (var pluginFile in pluginFiles)
+            {
+                var assembly = Assembly.LoadFrom(pluginFile);
+                LoadGeneratorsFromAssembly(assembly);
+            }
         }
 
         public object Create<T>()

@@ -28,30 +28,39 @@ namespace TestFaker
         private readonly Fake _fake = new Fake();
 
         [Test]
+        public void RecursionControl()
+        {
+            var value = _fake.Create<Class5>();
+            Assert.NotNull(value);
+            Assert.NotNull(value._Class6);
+            Assert.Null(value._Class6._Class5);
+        }
+
+        [Test]
         public void BoolNotStandardGeneration()
         {
-            var value = (bool) _fake.Create<bool>();
+            var value = _fake.Create<bool>();
             Assert.AreNotEqual(_bool, value);
         }
         
         [Test]
         public void ByteNotStandardGeneration()
         {
-            var value = (byte) _fake.Create<byte>();
+            var value = _fake.Create<byte>();
             Assert.AreNotEqual(_byte, value);
         }
         
         [Test]
         public void CharNotStandardGeneration()
         {
-            var value = (char) _fake.Create<char>();
+            var value = _fake.Create<char>();
             Assert.AreNotEqual(_char, value);
         }
         
         [Test]
         public void DoubleNotStandardGeneration()
         {
-            var value = (double) _fake.Create<double>();
+            var value = _fake.Create<double>();
             Assert.AreNotEqual(_double, value);
         }
         

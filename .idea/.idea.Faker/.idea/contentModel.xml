@@ -74,6 +74,8 @@
           <e p="Class2.cs" t="Include" />
           <e p="Class3.cs" t="Include" />
           <e p="Class4.cs" t="Include" />
+          <e p="Class5.cs" t="Include" />
+          <e p="Class6.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">

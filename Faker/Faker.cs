@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,46 +12,16 @@ namespace Faker
     {
         private readonly Dictionary<Type, IGenerator> _generators;
         private readonly string _pluginPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
+        private int recurtion;
+        private List<Type> _type;
 
         public Faker()
         {
             _generators = new Dictionary<Type, IGenerator>();
-//            InitDictionary();
-            LoadGeneratorsFromDirectory(); 
+            _type = new List<Type>();
+            LoadGeneratorsFromDirectory();
         }
 
-        private void InitDictionary()
-        {
-            IGenerator iGenerator = new BoolGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new ByteGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new CharGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new DateTimeGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new DoubleGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new FloatGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new IntGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new LongGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new SByteGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new ShortGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new StringGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new UIntGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new ULongGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-            iGenerator = new UShortGenerator();
-            _generators.Add(iGenerator.GetGenerationType(), iGenerator);
-        }
-        
         private void LoadGeneratorsFromDirectory()
         {
             if (_generators == null) return;
@@ -84,11 +55,19 @@ namespace Faker
                 }
             }
         }
+        
+        // Create(Type type)
+        // {
+        
+        // }
+        
+        // T Create<T>
+        // return (T) Create(typeof(T))
 
-        public object Create<T>()
+        public T Create<T>()
         {
             var type = typeof(T);
-            if (type.IsAbstract) return null;
+            if (type.IsAbstract) return default(T);
             var instance = new object();
             if (_generators.TryGetValue(type, out var generator))
             {
@@ -104,20 +83,37 @@ namespace Faker
             }
             else if (type == typeof(string))
             {
-                return default(string);
+                instance = null;
             }
             else if (type.IsClass || type.IsValueType)
             {
+                if (_type.Contains(type)) 
+                {
+                    if (_type.IndexOf(type) == 0)
+                    {
+                        if (recurtion == 0)
+                        {
+                            recurtion++;
+                        }
+                        else
+                        {
+                            recurtion--;
+                            return default;
+                        }
+                    }
+                }
+                _type.Add(type);
                 instance = CreateThroughConstructor(type);
-                if (instance == null) return default(T);;
+                if (instance == null) return default;
                 StuffTheObject(instance);
+                _type.Remove(type);
             }
-            else if (true)
+            else
             {
-                return default(T);
+                return default;
             }
 
-            return instance;
+            return (T) instance;
         }
 
         private object Create(Type type)
@@ -150,6 +146,7 @@ namespace Faker
                     constructorInfo = constructor;
                 }
             }
+            // LINQ Max
 
             return constructorInfo;
         }

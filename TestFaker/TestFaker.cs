@@ -33,7 +33,9 @@ namespace TestFaker
             var value = _fake.Create<Class5>();
             Assert.NotNull(value);
             Assert.NotNull(value._Class6);
-            Assert.Null(value._Class6._Class5);
+            Assert.NotNull(value._Class6._Class5);
+            Assert.NotNull(value._Class6._Class5._Class6);
+            Assert.Null(value._Class6._Class5._Class6._Class5);
         }
 
         [Test]

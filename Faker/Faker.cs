@@ -12,7 +12,7 @@ namespace Faker
     {
         private readonly Dictionary<Type, IGenerator> _generators;
         private readonly string _pluginPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
-        private int recurtion;
+        private int index = -1;
         private List<Type> _type;
 
         public Faker()
@@ -67,53 +67,48 @@ namespace Faker
         public T Create<T>()
         {
             var type = typeof(T);
-            if (type.IsAbstract) return default(T);
-            var instance = new object();
+            if (type.IsAbstract) return default;
             if (_generators.TryGetValue(type, out var generator))
             {
-                instance = generator.Generate();
+                return (T) generator.Generate();
             }
-            else if (type.IsEnum)
+            if (type.IsEnum)
             {
-                instance = new EnumGenerator<T>().Generate();
+                return (T) new EnumGenerator<T>().Generate();
             }
-            else if (type.IsArray)
+            if (type.IsArray)
             {
-                instance = new ArrayGenerator<T>().Generate();
+                return (T) new ArrayGenerator<T>().Generate();
             }
-            else if (type == typeof(string))
-            {
-                instance = null;
-            }
-            else if (type.IsClass || type.IsValueType)
-            {
-                if (_type.Contains(type)) 
-                {
-                    if (_type.IndexOf(type) == 0)
-                    {
-                        if (recurtion == 0)
-                        {
-                            recurtion++;
-                        }
-                        else
-                        {
-                            recurtion--;
-                            return default;
-                        }
-                    }
-                }
-                _type.Add(type);
-                instance = CreateThroughConstructor(type);
-                if (instance == null) return default;
-                StuffTheObject(instance);
-                _type.Remove(type);
-            }
-            else
+            if (type == typeof(string))
             {
                 return default;
             }
+            if (type.IsClass || type.IsValueType)
+            {
+                if (_type.Contains(type))
+                {
+                    if (_type.IndexOf(type) == index)
+                    {
+                        index = -1;
+                        return default;
+                    }
+                    if (index == -1)
+                    {
+                        index = _type.IndexOf(type);
+                    }
+                }
+                
+                _type.Add(type);
+                var instance = (T) CreateThroughConstructor(type);
+                if (instance == null) return default;
+                StuffTheObject(instance);
+                _type.Remove(type);
 
-            return (T) instance;
+                return instance;
+            }
+
+            return default;
         }
 
         private object Create(Type type)
